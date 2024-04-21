@@ -1,38 +1,85 @@
-import { useState } from "react";
-import "./TriviumGPT.css";
-import VictorHomePage from "../../assets/VictorHomePage.png";
-
+import { useEffect, useState } from "react";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import VictorHomePage from "../../assets/VictorHomePage.png";
+import "./TriviumGPT.css";
 
-import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import {
-  MainContainer,
   ChatContainer,
-  MessageList,
+  InputToolbox,
+  MainContainer,
   Message,
   MessageInput,
-  TypingIndicator,
-  InputToolbox,
-  AttachmentButton,
-  SendButton,
+  MessageList,
+  TypingIndicator
 } from "@chatscope/chat-ui-kit-react";
-import VoiceRec from "../VoiceRec/VoiceRec";
+import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
+import { initializeApp } from "firebase/app";
+
+
+import { GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
+const firebaseConfig = {
+  apiKey: "AIzaSyApcAIkpakr4l9msYaDxAzD89t9QUz3dl0",
+  authDomain: "personai-5d5fc.firebaseapp.com",
+  projectId: "personai-5d5fc",
+  storageBucket: "personai-5d5fc.appspot.com",
+  messagingSenderId: "584350673997",
+  appId: "1:584350673997:web:456c55ecc6ceabc718c004"
+};
+const app = initializeApp(firebaseConfig);
+const provider = new GoogleAuthProvider();
+const auth = getAuth();
+auth.useDeviceLanguage()
 
 const API_KEY = import.meta.env.VITE_REACT_API_GPT_KEY;
 
-function TriviumGPT() {
+function TriviumGPT(props) {
   const [typing, setTyping] = useState(false);
+  const [user, setUser] = useState(false);
   const [listening, setListening] = useState(false);
   const [notCompatible, setNotCompatible] = useState();
   const [iconstate, setIcon] = useState("square");
   const [messagePaused, setMessagePaused] = useState();
 
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(true);
+      } else {
+        setUser(false);
+      }
+    });
+  }, []);
+
+  function handleLogin(){
+    signInWithPopup(auth, provider)
+    .then((result) => {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+      // The signed-in user info.
+      const user = result.user;
+      // IdP data available using getAdditionalUserInfo(result)
+      // ...
+    }).catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.customData.email;
+      // The AuthCredential type that was used.
+      const credential = GoogleAuthProvider.credentialFromError(error);
+      // ...
+    });
+  
+  }
+
+
   const [messages, setMessages] = useState([
     {
-      message:
-        "Eai, tudo bem!? Eu sou o Prof. Victor, professor virtual do Colégio Trivium! Como posso ajudar você hoje?",
+      message: props.salute,
       sender: "ChatGPT",
     },
   ]); //Array de mensagens
@@ -94,7 +141,7 @@ function TriviumGPT() {
     const systemMessage = {
       role: "system",
       content:
-        "você se chama Victor, Aja como um professor STEM virtual ajudando um aluno com arduino, criação de jogos, robótica e eletrônica simples, você faz parte de um colégio chamado Colégio Trivium, caso a pergunta do aluno seja fora do escopo de educação e robótica, como por exemplo se o assunto for da àrea de psicologia ou esportes, peça desculpas e diga que pode ajuda-lo apenas no quesito de educação STEM, a pergunta feita foi a seguinte: ",
+        `aja como ${props.context} a pergunta feita foi a seguinte: `,
     };
 
     const apiRequestBody = {
@@ -135,12 +182,23 @@ function TriviumGPT() {
   const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
     useSpeechRecognition();
 
+
+  function handleLogout(){
+    signOut(auth).then(() => {
+      // Sign-out successful.
+    }).catch((error) => {
+      // An error happened.
+    });
+  }
+
   return (
     <div id="MainContainer">
       <div
         id="MainSirioContainer"
         // style={{ position: "relative", height: "900px", width: "1000px" }}
       >
+        <button onClick={()=>{handleLogin()}}>{user ? "logado" : "login"}</button>
+        <button onClick={()=>{handleLogout()}}>{user ? "logout" : ""}</button>
         <MainContainer>
           <ChatContainer id="SirioContainer">
             <MessageList
