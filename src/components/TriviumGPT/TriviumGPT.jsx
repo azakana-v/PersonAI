@@ -12,25 +12,21 @@ import {
   Message,
   MessageInput,
   MessageList,
-  TypingIndicator
+  TypingIndicator,
 } from "@chatscope/chat-ui-kit-react";
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
+
 import { initializeApp } from "firebase/app";
 
+import {
+  GoogleAuthProvider,
+  getAuth,
+  onAuthStateChanged,
+  signInWithPopup,
+  signOut,
+} from "firebase/auth";
 
-import { GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
-const firebaseConfig = {
-  apiKey: "AIzaSyApcAIkpakr4l9msYaDxAzD89t9QUz3dl0",
-  authDomain: "personai-5d5fc.firebaseapp.com",
-  projectId: "personai-5d5fc",
-  storageBucket: "personai-5d5fc.appspot.com",
-  messagingSenderId: "584350673997",
-  appId: "1:584350673997:web:456c55ecc6ceabc718c004"
-};
-const app = initializeApp(firebaseConfig);
-const provider = new GoogleAuthProvider();
-const auth = getAuth();
-auth.useDeviceLanguage()
+import { auth } from "../../App";
 
 const API_KEY = import.meta.env.VITE_REACT_API_GPT_KEY;
 
@@ -42,10 +38,10 @@ function TriviumGPT(props) {
   const [iconstate, setIcon] = useState("square");
   const [messagePaused, setMessagePaused] = useState();
 
-
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
+        console.log(user.uid);
         setUser(true);
       } else {
         setUser(false);
@@ -53,29 +49,28 @@ function TriviumGPT(props) {
     });
   }, []);
 
-  function handleLogin(){
+  function handleLogin() {
     signInWithPopup(auth, provider)
-    .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      // The signed-in user info.
-      const user = result.user;
-      // IdP data available using getAdditionalUserInfo(result)
-      // ...
-    }).catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.customData.email;
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
-    });
-  
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
   }
-
 
   const [messages, setMessages] = useState([
     {
@@ -140,8 +135,7 @@ function TriviumGPT(props) {
     //"system" -> uma mensagem inicial para como o chatgpt deve falar
     const systemMessage = {
       role: "system",
-      content:
-        `aja como ${props.context} a pergunta feita foi a seguinte: `,
+      content: `aja como ${props.context} a pergunta feita foi a seguinte: `,
     };
 
     const apiRequestBody = {
@@ -182,13 +176,14 @@ function TriviumGPT(props) {
   const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
     useSpeechRecognition();
 
-
-  function handleLogout(){
-    signOut(auth).then(() => {
-      // Sign-out successful.
-    }).catch((error) => {
-      // An error happened.
-    });
+  function handleLogout() {
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+      })
+      .catch((error) => {
+        // An error happened.
+      });
   }
 
   return (
@@ -197,8 +192,20 @@ function TriviumGPT(props) {
         id="MainSirioContainer"
         // style={{ position: "relative", height: "900px", width: "1000px" }}
       >
-        <button onClick={()=>{handleLogin()}}>{user ? "logado" : "login"}</button>
-        <button onClick={()=>{handleLogout()}}>{user ? "logout" : ""}</button>
+        <button
+          onClick={() => {
+            handleLogin();
+          }}
+        >
+          {user ? "logado" : "login"}
+        </button>
+        <button
+          onClick={() => {
+            handleLogout();
+          }}
+        >
+          {user ? "logout" : ""}
+        </button>
         <MainContainer>
           <ChatContainer id="SirioContainer">
             <MessageList
