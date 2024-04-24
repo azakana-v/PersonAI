@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import fundohome from "../../assets/fundohome.png";
 import logonav from "../../assets/logonav.png";
+import pen from '../../assets/Pen.svg';
 import TriviumGPT from "../../components/TriviumGPT/TriviumGPT";
+import defaultUser from '../../assets/defaultUser.jpg';
 import "./BotCreation.css";
 
 import {
@@ -82,12 +84,42 @@ const HomeText = styled.p`
   font-size: 20px;
   margin-bottom: 100px;
 `;
+const BotImageContainer = styled.section`
+position: relative;
+max-width: 200px;
+max-height: 200px;
+min-width: 200px;
+min-height: 200px;
+margin-bottom: 50px;
+margin-top: 10px;
+border-radius: 50%;
+`
+const Overlay = styled.div`
+  position: absolute;
+  margin-top: 10px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 1.2rem;
+  opacity: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  &:hover{
+    opacity: 1;
+  }
+ 
+  transition: opacity 0.3s ease;
+`;
 const BotImg = styled.img`
   background-color: gray;
-  max-width: 200px;
-  max-height: 200px;
-  min-width: 200px;
-  min-height: 200px;
+  width: 100%;
+  height: 100%;
   margin-bottom: 50px;
   margin-top: 10px;
   border-radius: 50%;
@@ -152,6 +184,7 @@ function BotCreation() {
   const [user, setUser] = useState(false);
   const [saluteMsg, setSaluteMsg] = useState("");
   const [contextConfig, setContextConfig] = useState();
+  const [createdImage, setCreatedImage] = useState('');
   const navigate = useNavigate();
 
   async function addData() {
@@ -174,7 +207,10 @@ function BotCreation() {
       ) : (
         <MainContentContainer>
           <CreateBotContainer>
-            <BotImg></BotImg>
+            <BotImageContainer>
+              <BotImg src={createdImage ? logonav : defaultUser} />
+              <Overlay className="overlay"><img src={pen} width={25} height={20}/> Criar avatar</Overlay>
+            </BotImageContainer>
             <Salute
               onChange={(e) => {
                 setSaluteMsg(e.target.value);
