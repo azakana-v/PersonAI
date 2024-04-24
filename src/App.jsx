@@ -6,6 +6,8 @@ import "./App.css";
 import TriviumGPT from "./components/TriviumGPT/TriviumGPT";
 import Home from "./pages/HomePage/Home";
 
+import NewUser from "./pages/CreateAccount/NewUser";
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -90,6 +92,7 @@ function App() {
             element={user ? <BotCreation /> : <Login />}
           ></Route>
           <Route path="/login" element={<Login />}></Route>
+          <Route path="/NewUser" element={<NewUser />}></Route>
         </Routes>
       </Router>
     </div>

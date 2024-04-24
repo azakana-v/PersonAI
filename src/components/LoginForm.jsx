@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import googleIcon from '../assets/googleico.svg';
 import facebookIcon from '../assets/facebookicon.svg';
+import { useNavigate } from "react-router-dom";
 
 const FormArea = styled.form`
     display: flex;
@@ -20,6 +21,20 @@ color: #113C4F;
 padding: 0.1rem;
 border: 1px solid #ccc;
 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+const Overlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+  border-radius: 50%;
 `;
 
 const FormLabel = styled.label`
@@ -78,6 +93,8 @@ const BtnGoogle = styled.button`
 `
 
 function LoginForm(){
+
+const navigate = useNavigate();
     return(
         <FormArea>
             <h3 style={{ textAlign:"center" }}>Realizar Log In</h3>
@@ -95,6 +112,7 @@ function LoginForm(){
                 <img src={googleIcon} alt="A google logo icon in pixel perfect"  width={20} height={20}/>
                 Sign In with Google
             </BtnGoogle >
+            <span onClick={() => navigate("/NewUser")} style={{ textAlign: 'center', marginTop: '0.3rem', color:'#0000EE', cursor: 'pointer' }}>Não possui conta? Crie uma agora.</span>
         </FormArea>
     )
 }
