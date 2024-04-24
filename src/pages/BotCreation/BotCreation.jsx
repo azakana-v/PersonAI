@@ -15,8 +15,9 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { doc, setDoc, getFirestore } from "firebase/firestore";
+import { doc, setDoc, getFirestore, getDoc } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
+import CreateImageModal from "../../components/CreateImageModal";
 
 const firebaseConfig = {
   apiKey: "AIzaSyApcAIkpakr4l9msYaDxAzD89t9QUz3dl0",
@@ -144,8 +145,10 @@ const Salute = styled.input`
   border: none;
   height: 50px;
   border-radius: 10px;
+
   color: lightgray;
   padding: 1rem;
+
   &:focus {
     outline-color: #2b8fb9;
   }
@@ -156,8 +159,10 @@ const Context = styled.textarea`
   border: none;
   height: 20rem;
   border-radius: 10px;
+
   padding: 2rem;
   color: lightgray;
+
   &:focus {
     outline-color: #2b8fb9;
   }
@@ -187,17 +192,41 @@ function BotCreation() {
   const [createdImage, setCreatedImage] = useState('');
   const navigate = useNavigate();
 
-  async function addData() {
-    const docData = {
-      uiduser: "",
-      adm: false,
-      chats: [
-        { context: "Ola eu sou o gp", img: "caminhodaimg", salute: "oi" },
-      ],
-    };
+  const handleModalOpen = () => {
+    setOpenModal(!openModal);
+  }
 
-    const dbPathRef = doc(db, "usuarios", "teste");
-    await setDoc(dbPathRef, docData, { merge: true }); //caminho, documento, merge
+  const closeModal = () => {
+    setOpenModal(false);
+  }
+
+  async function addData() {
+    const dataUser = await getUserData();
+    const newChats = dataUser.chats
+      ? [
+          ...dataUser.chats,
+          { context: contextConfig, img: "", salute: saluteMsg },
+        ]
+      : [{ context: contextConfig, img: "", salute: saluteMsg }];
+    const newPersona = { chats: newChats };
+    const dbPathRef = doc(db, "usuarios", auth.currentUser.uid);
+    await setDoc(dbPathRef, newPersona, { merge: true }).then(
+      navigate("/TriviumGPT")
+    ); //caminho, documento, merge
+  }
+
+  async function getUserData() {
+    const userRef = doc(db, "usuarios", auth.currentUser.uid);
+
+    const userData = await getDoc(userRef);
+
+    if (userData.exists()) {
+      console.log("Document data:", userData.data());
+      return userData.data();
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+    }
   }
 
   return (
