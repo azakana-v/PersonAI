@@ -10,8 +10,10 @@ import {
   signOut,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   function handleLogin() {
     signInWithPopup(auth, provider)
       .then((result) => {
@@ -62,6 +64,7 @@ const Login = () => {
       if (user) {
         setUser(true);
         addData();
+        navigate("/");
       } else {
         setUser(false);
       }
@@ -69,11 +72,16 @@ const Login = () => {
   }, []);
 
   return (
-    <div style={{display: 'flex', width: '100vw',alignItems: 'center', justifyContent: 'center', height: '80%'}}>
-      <button onClick={user ? handleLogout : handleLogin}>
-        {user ? "Logout" : "Login"}
-      </button>
-      <LoginForm />
+    <div
+      style={{
+        display: "flex",
+        width: "100vw",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "80%",
+      }}
+    >
+      {user ? "Logado" : <LoginForm handlelogin={handleLogin} />}
     </div>
   );
 };

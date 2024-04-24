@@ -27,6 +27,7 @@ import {
 } from "firebase/auth";
 
 import { doc, getDoc } from "firebase/firestore";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const API_KEY = import.meta.env.VITE_REACT_API_GPT_KEY;
 
@@ -239,8 +240,14 @@ function TriviumGPT(props) {
         // style={{ position: "relative", height: "900px", width: "1000px" }}
       >
         <div id="sideChatsMainContainer">
-          {userObj
-            ? userObj.chats.map((x, i) => {
+          {userObj ? (
+            <InfiniteScroll
+              endMessage={<p>Fim :)</p>}
+              dataLength={userObj.chats.length}
+              height={"100vh"}
+            >
+              {" "}
+              {userObj.chats.map((x, i) => {
                 if (true)
                   return (
                     <div
@@ -261,8 +268,11 @@ function TriviumGPT(props) {
                       <hr />
                     </div>
                   );
-              })
-            : "Erro ao carregar chats antigos"}
+              })}
+            </InfiniteScroll>
+          ) : (
+            "Erro ao carregar chats antigos"
+          )}
         </div>
 
         <MainContainer>
@@ -282,7 +292,17 @@ function TriviumGPT(props) {
                     if (messages[i].sender === "ChatGPT") {
                       return (
                         <div id="SirioMessage">
-                          <img src={VictorHomePage} alt="" />
+                          <div
+                            style={{
+                              backgroundColor: "#113C4F",
+                              width: "50px",
+                              height: "50px",
+                              borderRadius: "50%",
+                              marginRight: "10px  ",
+                            }}
+                          >
+                            <img src={""} alt="" />
+                          </div>
                           <Message
                             className="MessagesContainers"
                             key={i}
@@ -348,12 +368,10 @@ function TriviumGPT(props) {
                   }}
                 >
                   <box-icon
-                    color="rgb(242, 16, 61)"
+                    color="#113C4F"
                     type="solid"
                     name="microphone"
-                    style={
-                      listening ? { backgroundColor: "rgb(242, 16, 61)" } : {}
-                    }
+                    style={listening ? { backgroundColor: "#113C4F" } : {}}
                   ></box-icon>
                 </button>
               </div>{" "}

@@ -84,7 +84,10 @@ function App() {
         <Navbar></Navbar>
         <Routes>
           <Route path="/" element={<Home />}></Route>
-          <Route path="/TriviumGPT" element={<TriviumGPT />}></Route>
+          <Route
+            path="/TriviumGPT"
+            element={user ? <TriviumGPT /> : <Login />}
+          ></Route>
           <Route
             path="/BotCreation"
             element={user ? <BotCreation /> : <Login />}
