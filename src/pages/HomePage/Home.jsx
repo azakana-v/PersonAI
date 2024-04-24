@@ -59,14 +59,7 @@ function Home() {
         <HomeTextContainer>
           <HomeTitle>Crie um persona em segundos.</HomeTitle>
           <HomeText>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam,
-            quia? Ut, sapiente nesciunt ratione delectus quisquam non facilis
-            blanditiis inventore temporibus perferendis reiciendis consequuntur
-            quasi corporis nisi quas. Ut, nemo. Lorem ipsum dolor sit amet
-            consectetur adipisicing elit. Magnam, quia? Ut, sapiente nesciunt
-            ratione delectus quisquam non facilis blanditiis inventore
-            temporibus perferendis reiciendis consequuntur quasi corporis nisi
-            quas. Ut, nemo.
+          O PersonaAI é um projeto de inteligência artificial que cria personas em segundos para fornecer conselhos e ajudar em uma ampla variedade de problemas. Combinando aprendizado de máquina e compreensão da linguagem natural, ele oferece assistência personalizada em tempo real para desafios como orientação de carreira e sugestões de estilo de vida saudável. Experimente o PersonaAI hoje para obter insights valiosos e orientação personalizada sempre que precisar!
           </HomeText>
         </HomeTextContainer>
       </HomeContainer>
