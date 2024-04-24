@@ -4,7 +4,7 @@
 
 #MainSirioContainer {
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
   height: 100%;
   width: 100%;
@@ -15,6 +15,7 @@
 }
 #SirioContainer {
   max-width: 800px;
+  min-width: 800px;
 }
 
 #SirioMessage {
@@ -67,4 +68,27 @@
 
 .toolBox-buttons:hover {
   cursor: pointer;
+}
+
+#sideChatsMainContainer {
+  width: 30%;
+  height: 100%;
+  /* background-color: black; */
+}
+
+.cardSideChatsMainContainer {
+  display: flex;
+  align-items: center;
+}
+
+.cardSideChats {
+  margin: 20px 0;
+}
+
+.imgSideChatContainer {
+  width: 25px;
+  height: 25px;
+  background-color: rgb(255, 152, 152);
+  margin-right: 15px;
+  border-radius: 50%;
 }
