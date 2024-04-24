@@ -16,6 +16,7 @@
 #SirioContainer {
   max-width: 800px;
   min-width: 800px;
+  height: 90vh !important;
 }
 
 #SirioMessage {
@@ -36,29 +37,29 @@
 
 /* Mensagem do usuario */
 .cs-message--outgoing .cs-message__content {
-  background-color: var(--main-red-color) !important;
+  background-color: #99c5d2 !important;
   color: white !important;
 }
 
 /* Mensagem do chat */
 .cs-message__content {
-  background-color: rgb(255, 152, 152) !important;
+  background-color: #99c5d2 !important;
   /* color: white !important; */
 }
 
 /* Input */
 .cs-message-input__content-editor-wrapper {
-  background-color: rgb(255, 97, 97) !important;
+  background-color: #99c5d2 !important;
 }
 
 .cs-message-input__content-editor {
-  background-color: rgb(255, 97, 97) !important;
+  background-color: #99c5d2 !important;
   color: white !important;
 }
 
 /* Send ico */
 .fa-paper-plane {
-  color: var(--main-red-color) !important;
+  color: #113c4f !important;
 }
 
 .toolBox-buttons {
@@ -88,7 +89,7 @@
 .imgSideChatContainer {
   width: 25px;
   height: 25px;
-  background-color: rgb(255, 152, 152);
+  background-color: #99c5d2;
   margin-right: 15px;
   border-radius: 50%;
 }

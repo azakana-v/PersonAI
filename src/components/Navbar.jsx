@@ -3,7 +3,7 @@ import styled from "styled-components";
 import logonav from "../assets/logonav.png";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../App";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 const NavbarContainer = styled.div`
   width: 100%;
   height: 80px;
@@ -11,8 +11,12 @@ const NavbarContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 999;
+  /* position: absolute; */
 `;
-const NavButtons = styled.div``;
+const NavButtons = styled.div`
+  display: flex;
+`;
 
 const LoginButton = styled.button`
   width: 100px;
@@ -20,7 +24,8 @@ const LoginButton = styled.button`
   border-radius: 10px;
   height: 50px;
   border: none;
-  margin-right: 100px;
+  margin-bottom: 10px;
+  /* margin-bottom: 20px; */
   &:hover {
     cursor: pointer;
   }
@@ -36,45 +41,155 @@ const NavbarLogo = styled.img`
   }
 `;
 
+const PerfilCardMainContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-right: 100px;
+  cursor: pointer;
+  /* width: 0px; */
+  p {
+    white-space: nowrap;
+  }
+`;
+
+const PerfilCardContainer = styled.div`
+  max-width: 0px;
+`;
+
+const PerfilCard = styled.div`
+  z-index: 999;
+  position: relative;
+  min-height: fit-content;
+  min-width: fit-content;
+  padding: 20px;
+  background-color: #74a1b3;
+  left: -120px;
+  top: 150px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+
+  & :first-child {
+  }
+  /* animation: teste 0.1s ease-in-out forwards; */
+  @keyframes teste {
+    0% {
+      top: -100px;
+    }
+    100% {
+      top: 115px;
+    }
+  }
+`;
+
 const Navbar = (props) => {
   const [user, setUser] = useState(false);
+  const [screenName, setScreenName] = useState();
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(true);
+        setScreenName(auth.currentUser.displayName);
       } else {
         setUser(false);
       }
     });
   }, []);
 
+  function handleLogout() {
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+      })
+      .catch((error) => {
+        // An error happened.
+      });
+  }
+
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState("homePage");
+  const [perfilClicked, setPerfilClicked] = useState(false);
   return (
     <NavbarContainer>
       <NavbarLogo
         onClick={() => {
           navigate("/");
+          console.log(auth.currentUser);
         }}
         src={logonav}
       ></NavbarLogo>
       <NavButtons>
-        <LoginButton
+        {/* <LoginButton
           onClick={() => {
             navigate("/BotCreation");
           }}
         >
           Criar!
-        </LoginButton>
+        </LoginButton> */}
 
-        <LoginButton
+        <PerfilCardMainContainer
           onClick={() => {
+            {
+              user ? setPerfilClicked(!perfilClicked) : "";
+            }
+          }}
+        >
+          {user ? <p>{screenName}</p> : " "}
+          {perfilClicked ? (
+            <PerfilCardContainer>
+              <PerfilCard>
+                <LoginButton
+                  onClick={() => {
+                    navigate("/TriviumGPT");
+                  }}
+                >
+                  Meus chats
+                </LoginButton>
+                <LoginButton
+                  onClick={() => {
+                    navigate("/BotCreation");
+                  }}
+                >
+                  Criar!
+                </LoginButton>
+                <LoginButton
+                  onClick={() => {
+                    {
+                      user ? handleLogout() : null;
+                    }
+                    navigate("/login");
+                  }}
+                >
+                  {user ? "Logout" : "Login"}
+                </LoginButton>
+              </PerfilCard>
+            </PerfilCardContainer>
+          ) : user ? (
+            ""
+          ) : (
+            <LoginButton
+              style={{ marginBottom: "0" }}
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              {user ? "Logout" : "Login"}
+            </LoginButton>
+          )}
+        </PerfilCardMainContainer>
+
+        {/* <LoginButton
+          onClick={() => {
+            {
+              user ? handleLogout() : null;
+            }
             navigate("/login");
           }}
         >
-          Login
-        </LoginButton>
+          {user ? "Logout" : "Login"}
+        </LoginButton> */}
       </NavButtons>
     </NavbarContainer>
   );
