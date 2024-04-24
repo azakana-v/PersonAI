@@ -1,9 +1,13 @@
 import styled from "styled-components";
+
+import { useNavigate } from "react-router-dom";
+
 import googleIcon from "../assets/googleico.svg";
 import facebookIcon from "../assets/facebookicon.svg";
 import { useState } from "react";
 import { auth } from "../App";
 import { signInWithEmailAndPassword } from "firebase/auth";
+
 
 const FormArea = styled.form`
   display: flex;
@@ -26,6 +30,20 @@ const FormInput = styled.input`
   &:focus {
     outline-color: #2b8fb9;
   }
+`;
+
+const Overlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+  border-radius: 50%;
 `;
 
 const FormLabel = styled.label`
@@ -84,7 +102,11 @@ const BtnGoogle = styled.button`
   }
 `;
 
+
+
+
 function LoginForm(props) {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   return (
@@ -147,6 +169,7 @@ function LoginForm(props) {
         />
         Sign In with Google
       </BtnGoogle>
+<span onClick={() => navigate("/NewUser")} style={{ textAlign: 'center', marginTop: '0.3rem', color:'#0000EE', cursor: 'pointer' }}>Não possui conta? Crie uma agora.</span>
     </FormArea>
   );
 }
