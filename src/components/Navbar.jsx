@@ -84,11 +84,13 @@ const PerfilCard = styled.div`
 
 const Navbar = (props) => {
   const [user, setUser] = useState(false);
+  const [screenName, setScreenName] = useState();
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(true);
+        setScreenName(auth.currentUser.displayName);
       } else {
         setUser(false);
       }
@@ -113,6 +115,7 @@ const Navbar = (props) => {
       <NavbarLogo
         onClick={() => {
           navigate("/");
+          console.log(auth.currentUser);
         }}
         src={logonav}
       ></NavbarLogo>
@@ -132,7 +135,7 @@ const Navbar = (props) => {
             }
           }}
         >
-          {user ? <p>{auth.currentUser.displayName}</p> : " "}
+          {user ? <p>{screenName}</p> : " "}
           {perfilClicked ? (
             <PerfilCardContainer>
               <PerfilCard>

@@ -38,6 +38,15 @@ const HomeText = styled.p`
 const HomeImg = styled.img`
   width: 40%;
   margin-bottom: 100px;
+  animation: floating 2s infinite alternate-reverse ease-in-out;
+  @keyframes floating {
+    0% {
+      transform: translatey(0);
+    }
+    100% {
+      transform: translatey(30px);
+    }
+  }
 `;
 
 function Home() {

@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import googleIcon from "../assets/googleico.svg";
 import facebookIcon from "../assets/facebookicon.svg";
+import { useState } from "react";
+import { auth } from "../App";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const FormArea = styled.form`
   display: flex;
@@ -82,16 +85,46 @@ const BtnGoogle = styled.button`
 `;
 
 function LoginForm(props) {
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
   return (
     <FormArea>
       <h3 style={{ textAlign: "center" }}>Realizar Log In</h3>
       <FormLabel>Email</FormLabel>
-      <FormInput type="email" placeholder="Digite seu email" />
+      <FormInput
+        type="email"
+        onChange={(e) => {
+          setEmail(e.target.value);
+          console.log(email);
+        }}
+        value={email}
+        placeholder="Digite seu email"
+      />
       <FormLabel>Senha</FormLabel>
-      <FormInput type="password" placeholder="Digite sua senha" />
-      <FormButton>Entrar</FormButton>
+      <FormInput
+        onChange={(e) => {
+          setSenha(e.target.value);
+          console.log(senha);
+        }}
+        value={senha}
+        type="password"
+        placeholder="Digite sua senha"
+      />
+      <FormButton
+        onClick={(e) => {
+          e.preventDefault();
+          props.handleSignin(email, senha);
+        }}
+      >
+        Entrar
+      </FormButton>
       <p style={{ textAlign: "center" }}>ou</p>
-      <BtnFacebook>
+      <BtnFacebook
+        onClick={(e) => {
+          e.preventDefault();
+          props.handlelogin("facebook");
+        }}
+      >
         <img
           src={facebookIcon}
           alt="A facebook logo icon in pixel perfect"
@@ -103,7 +136,7 @@ function LoginForm(props) {
       <BtnGoogle
         onClick={(e) => {
           e.preventDefault();
-          props.handlelogin();
+          props.handlelogin("google");
         }}
       >
         <img

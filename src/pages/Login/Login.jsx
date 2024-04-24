@@ -2,23 +2,47 @@ import React, { useEffect, useState } from "react";
 import LoginForm from "../../components/LoginForm";
 
 import { auth, db } from "../../App";
-import { provider } from "../../App";
+import { updateProfile } from "firebase/auth";
 import {
   signInWithPopup,
   GoogleAuthProvider,
   onAuthStateChanged,
   signOut,
+  FacebookAuthProvider,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
-  function handleLogin() {
+
+  function handleSignin(email, password) {
+    signInWithEmailAndPassword(auth, email, password)
+      .then(async (userCredential) => {
+        // Signed in
+        updateProfile(auth.currentUser, {
+          displayName: "teste",
+        });
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+  }
+
+  function handleLogin(authenticator) {
+    const provider =
+      authenticator == "facebook"
+        ? new FacebookAuthProvider()
+        : authenticator == "google"
+        ? new GoogleAuthProvider()
+        : "";
     signInWithPopup(auth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
+
         const token = credential.accessToken;
         // The signed-in user info.
         const userJson = result.user;
@@ -81,7 +105,11 @@ const Login = () => {
         height: "80%",
       }}
     >
-      {user ? "Logado" : <LoginForm handlelogin={handleLogin} />}
+      {user ? (
+        "Logado"
+      ) : (
+        <LoginForm handleSignin={handleSignin} handlelogin={handleLogin} />
+      )}
     </div>
   );
 };
