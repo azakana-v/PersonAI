@@ -6,8 +6,10 @@ import logopng from "../../assets/logo personai png.png";
 
 import "./Home.css";
 import { db } from "../../App";
+import Svg from "../../components/Svg";
 
 const MainContainer = styled.div`
+  overflow: hidden;
   height: 100vh;
 `;
 
@@ -16,10 +18,11 @@ const HomeContainer = styled.div`
   align-items: center;
   /* justify-content: center; */
   height: 100%;
-  background-image: url(${fundohome});
+  /* background-image: url(${fundohome}); */
   background-repeat: no-repeat;
   background-size: 100%;
   background-position: top;
+  overflow: hidden;
 `;
 const HomeTextContainer = styled.div`
   max-width: 40%;
@@ -54,12 +57,20 @@ function Home() {
 
   return (
     <MainContainer>
+      <Svg></Svg>
       <HomeContainer>
         <HomeImg src={logopng} />
         <HomeTextContainer>
           <HomeTitle>Crie um persona em segundos.</HomeTitle>
           <HomeText>
-          O PersonaAI é um projeto de inteligência artificial que cria personas em segundos para fornecer conselhos e ajudar em uma ampla variedade de problemas. Combinando aprendizado de máquina e compreensão da linguagem natural, ele oferece assistência personalizada em tempo real para desafios como orientação de carreira e sugestões de estilo de vida saudável. Experimente o PersonaAI hoje para obter insights valiosos e orientação personalizada sempre que precisar!
+            O PersonaAI é um projeto de inteligência artificial que cria
+            personas em segundos para fornecer conselhos e ajudar em uma ampla
+            variedade de problemas. Combinando aprendizado de máquina e
+            compreensão da linguagem natural, ele oferece assistência
+            personalizada em tempo real para desafios como orientação de
+            carreira e sugestões de estilo de vida saudável. Experimente o
+            PersonaAI hoje para obter insights valiosos e orientação
+            personalizada sempre que precisar!
           </HomeText>
         </HomeTextContainer>
       </HomeContainer>

@@ -12,6 +12,7 @@ const NavbarContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   z-index: 999;
+  /* position: absolute; */
 `;
 const NavButtons = styled.div`
   display: flex;
@@ -58,6 +59,7 @@ const PerfilCardContainer = styled.div`
 `;
 
 const PerfilCard = styled.div`
+  z-index: 999;
   position: relative;
   min-height: fit-content;
   min-width: fit-content;
@@ -65,7 +67,6 @@ const PerfilCard = styled.div`
   background-color: #74a1b3;
   left: -120px;
   top: 150px;
-  z-index: 0;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 

@@ -244,7 +244,7 @@ function TriviumGPT(props) {
             <InfiniteScroll
               endMessage={<p>Fim :)</p>}
               dataLength={userObj.chats.length}
-              height={"100vh"}
+              height={"90vh"}
             >
               {" "}
               {userObj.chats.map((x, i) => {

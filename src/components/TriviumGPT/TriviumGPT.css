@@ -16,6 +16,7 @@
 #SirioContainer {
   max-width: 800px;
   min-width: 800px;
+  height: 90vh !important;
 }
 
 #SirioMessage {
