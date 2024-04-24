@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import LoginForm from "../../components/LoginForm";
 
 import { auth, db } from "../../App";
 import { provider } from "../../App";
@@ -68,10 +69,11 @@ const Login = () => {
   }, []);
 
   return (
-    <div>
+    <div style={{display: 'flex', width: '100vw',alignItems: 'center', justifyContent: 'center', height: '80%'}}>
       <button onClick={user ? handleLogout : handleLogin}>
         {user ? "Logout" : "Login"}
       </button>
+      <LoginForm />
     </div>
   );
 };
