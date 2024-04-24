@@ -107,24 +107,24 @@ const CreateBotContainer = styled.div`
 `;
 
 const Salute = styled.input`
-  width: 50%;
+  width: 60%;
   margin-bottom: 20px;
   border: none;
   height: 50px;
   border-radius: 10px;
   color: lightgray;
-  padding: 5px;
+  padding: 1rem;
   &:focus {
     outline-color: #2b8fb9;
   }
 `;
 const Context = styled.textarea`
-  width: 80%;
+  width: 60%;
   margin-bottom: 20px;
   border: none;
-  height: 300px;
+  height: 20rem;
   border-radius: 10px;
-  padding: 20px;
+  padding: 2rem;
   color: lightgray;
   &:focus {
     outline-color: #2b8fb9;
@@ -137,6 +137,12 @@ const Logo = styled.img`
 const CreateButton = styled.button`
   width: 250px;
   height: 50px;
+  margin: 1rem 0rem;
+background-color: #113C4F;
+color: #fff;
+border-radius: 0.5rem;
+padding: 0.5rem;
+cursor: pointer;
 `;
 
 function BotCreation() {
