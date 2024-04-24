@@ -96,7 +96,7 @@ function NewUser(){
             <FormInput type="password" placeholder="Digite sua senha" />
             <FormLabel>Repita a Senha</FormLabel>
             <FormInput type="password" placeholder="Digite sua senha" />
-            <FormButton>Entrar</FormButton>
+            <FormButton>Criar</FormButton>
             <p style={{textAlign: 'center'}}>ou</p>
             <BtnFacebook >
                 <img src={facebookIcon} alt="A facebook logo icon in pixel perfect" width={30} height={30}/>
