@@ -4,7 +4,7 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import VictorHomePage from "../../assets/VictorHomePage.png";
 import "./TriviumGPT.css";
-
+import { db, auth } from "../../App";
 import {
   ChatContainer,
   InputToolbox,
@@ -26,28 +26,77 @@ import {
   signOut,
 } from "firebase/auth";
 
-import { auth } from "../../App";
+import { doc, getDoc } from "firebase/firestore";
 
 const API_KEY = import.meta.env.VITE_REACT_API_GPT_KEY;
 
 function TriviumGPT(props) {
   const [typing, setTyping] = useState(false);
   const [user, setUser] = useState(false);
+  const [userObj, setUserObj] = useState();
   const [listening, setListening] = useState(false);
   const [notCompatible, setNotCompatible] = useState();
   const [iconstate, setIcon] = useState("square");
   const [messagePaused, setMessagePaused] = useState();
+  const [salute, setSalute] = useState();
+  const [context, setContext] = useState();
+  const [messages, setMessages] = useState([
+    {
+      message: salute,
+      sender: "ChatGPT",
+    },
+  ]); //Array de mensagens
 
+  function updateSaluteAndContext(newSalute, newContext) {
+    setSalute(newSalute);
+    setContext(newContext);
+
+    setMessages([
+      {
+        message: `${newSalute}`,
+        sender: "ChatGPT",
+      },
+    ]);
+    console.log(messages);
+  }
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         console.log(user.uid);
         setUser(true);
+        getUserData();
+
+        console.log("setou true");
       } else {
         setUser(false);
       }
     });
   }, []);
+
+  async function getUserData() {
+    const userRef = doc(db, "usuarios", auth.currentUser.uid);
+    const userData = await getDoc(userRef);
+
+    if (userData.exists()) {
+      const lastChat = userData.data().chats.length - 1;
+      const initialSalute = userData.data().chats[lastChat].salute;
+      const system = userData.data().chats[lastChat].context;
+      console.log(lastChat);
+
+      console.log("Document data:", userData.data());
+      setUserObj(userData.data());
+      setContext(system);
+      setMessages([
+        {
+          message: `${initialSalute}`,
+          sender: "ChatGPT",
+        },
+      ]);
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  }
 
   function handleLogin() {
     signInWithPopup(auth, provider)
@@ -72,12 +121,6 @@ function TriviumGPT(props) {
       });
   }
 
-  const [messages, setMessages] = useState([
-    {
-      message: props.salute,
-      sender: "ChatGPT",
-    },
-  ]); //Array de mensagens
   async function talk(message) {
     const synth = window.speechSynthesis;
     let voices = synth.getVoices();
@@ -93,6 +136,7 @@ function TriviumGPT(props) {
   }
 
   const handleSend = async (message) => {
+    console.log(context);
     setListening(false);
     const newMessage = {
       message: message,
@@ -135,13 +179,15 @@ function TriviumGPT(props) {
     //"system" -> uma mensagem inicial para como o chatgpt deve falar
     const systemMessage = {
       role: "system",
-      content: `aja como ${props.context} a pergunta feita foi a seguinte: `,
+      content: `${context}`,
     };
+    console.log(context);
 
     const apiRequestBody = {
       model: "gpt-3.5-turbo",
       messages: [systemMessage, ...apiMessages],
     };
+    console.log(apiRequestBody);
 
     await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -192,20 +238,33 @@ function TriviumGPT(props) {
         id="MainSirioContainer"
         // style={{ position: "relative", height: "900px", width: "1000px" }}
       >
-        <button
-          onClick={() => {
-            handleLogin();
-          }}
-        >
-          {user ? "logado" : "login"}
-        </button>
-        <button
-          onClick={() => {
-            handleLogout();
-          }}
-        >
-          {user ? "logout" : ""}
-        </button>
+        <div id="sideChatsMainContainer">
+          {userObj
+            ? userObj.chats.map((x, i) => {
+                if (true)
+                  return (
+                    <div
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        updateSaluteAndContext(
+                          userObj.chats[i].salute,
+                          userObj.chats[i].context
+                        );
+                      }}
+                    >
+                      <div className="cardSideChatsMainContainer">
+                        <div className="imgSideChatContainer"></div>
+                        <div className="cardSideChats">
+                          <p>{userObj.chats[i].salute}</p>
+                        </div>
+                      </div>
+                      <hr />
+                    </div>
+                  );
+              })
+            : "Erro ao carregar chats antigos"}
+        </div>
+
         <MainContainer>
           <ChatContainer id="SirioContainer">
             <MessageList
@@ -217,28 +276,31 @@ function TriviumGPT(props) {
                 ) : null
               }
             >
-              {messages.map((message, i) => {
-                if (messages[i].sender === "ChatGPT") {
-                  return (
-                    <div id="SirioMessage">
-                      <img src={VictorHomePage} alt="" />
-                      <Message
-                        className="MessagesContainers"
-                        key={i}
-                        model={message}
-                      />
-                    </div>
-                  );
-                } else {
-                  return (
-                    <Message
-                      className="MessagesContainers"
-                      key={i}
-                      model={message}
-                    />
-                  );
-                }
-              })}
+              {userObj
+                ? //isso aqui tem que ser async
+                  messages.map((message, i) => {
+                    if (messages[i].sender === "ChatGPT") {
+                      return (
+                        <div id="SirioMessage">
+                          <img src={VictorHomePage} alt="" />
+                          <Message
+                            className="MessagesContainers"
+                            key={i}
+                            model={message}
+                          />
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <Message
+                          className="MessagesContainers"
+                          key={i}
+                          model={message}
+                        />
+                      );
+                    }
+                  })
+                : null}
             </MessageList>
             {/* {listening ? ( */}
             <MessageInput

@@ -13,7 +13,7 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { doc, setDoc, getFirestore } from "firebase/firestore";
+import { doc, setDoc, getFirestore, getDoc } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
@@ -112,8 +112,10 @@ const Salute = styled.input`
   border: none;
   height: 50px;
   border-radius: 10px;
+
   color: lightgray;
   padding: 1rem;
+
   &:focus {
     outline-color: #2b8fb9;
   }
@@ -124,8 +126,10 @@ const Context = styled.textarea`
   border: none;
   height: 20rem;
   border-radius: 10px;
+
   padding: 2rem;
   color: lightgray;
+
   &:focus {
     outline-color: #2b8fb9;
   }
@@ -155,54 +159,65 @@ function BotCreation() {
   const navigate = useNavigate();
 
   async function addData() {
-    const docData = {
-      uiduser: "",
-      adm: false,
-      chats: [
-        { context: "Ola eu sou o gp", img: "caminhodaimg", salute: "oi" },
-      ],
-    };
+    const dataUser = await getUserData();
+    const newChats = dataUser.chats
+      ? [
+          ...dataUser.chats,
+          { context: contextConfig, img: "", salute: saluteMsg },
+        ]
+      : [{ context: contextConfig, img: "", salute: saluteMsg }];
+    const newPersona = { chats: newChats };
+    const dbPathRef = doc(db, "usuarios", auth.currentUser.uid);
+    await setDoc(dbPathRef, newPersona, { merge: true }).then(
+      navigate("/TriviumGPT")
+    ); //caminho, documento, merge
+  }
 
-    const dbPathRef = doc(db, "usuarios", "teste");
-    await setDoc(dbPathRef, docData, { merge: true }); //caminho, documento, merge
+  async function getUserData() {
+    const userRef = doc(db, "usuarios", auth.currentUser.uid);
+
+    const userData = await getDoc(userRef);
+
+    if (userData.exists()) {
+      console.log("Document data:", userData.data());
+      return userData.data();
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+    }
   }
 
   return (
     <MainContainer>
-      {created ? (
-        <TriviumGPT context={contextConfig} salute={saluteMsg}></TriviumGPT>
-      ) : (
-        <MainContentContainer>
-          <CreateBotContainer>
-            <BotImg></BotImg>
-            <Salute
-              onChange={(e) => {
-                setSaluteMsg(e.target.value);
-              }}
-              value={saluteMsg}
-              placeholder="Digite a mensagem inicial..."
-            >
-              {}
-            </Salute>
-            <Context
-              onChange={(e) => {
-                setContextConfig(e.target.value);
-              }}
-              value={contextConfig}
-              placeholder="Digite o comportamento do assistente..."
-            ></Context>
-            <Logo src={logonav} />
-            <CreateButton
-              onClick={() => {
-                addData();
-                // setCreated(true);
-              }}
-            >
-              Criar!
-            </CreateButton>
-          </CreateBotContainer>
-        </MainContentContainer>
-      )}
+      <MainContentContainer>
+        <CreateBotContainer>
+          <BotImg></BotImg>
+          <Salute
+            onChange={(e) => {
+              setSaluteMsg(e.target.value);
+            }}
+            value={saluteMsg}
+            placeholder="Digite a mensagem inicial..."
+          >
+            {}
+          </Salute>
+          <Context
+            onChange={(e) => {
+              setContextConfig(e.target.value);
+            }}
+            value={contextConfig}
+            placeholder="Digite o comportamento do assistente..."
+          ></Context>
+          <Logo src={logonav} />
+          <CreateButton
+            onClick={() => {
+              addData();
+            }}
+          >
+            Criar!
+          </CreateButton>
+        </CreateBotContainer>
+      </MainContentContainer>
     </MainContainer>
   );
 }

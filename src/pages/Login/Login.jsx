@@ -50,14 +50,11 @@ const Login = () => {
 
   async function addData() {
     const docData = {
-      name: auth.currentUser.displayName + "bla",
-      adm: false,
-      chats: [],
+      name: auth.currentUser.displayName,
     };
-
     const dbPathRef = doc(db, "usuarios", auth.currentUser.uid);
     console.log(dbPathRef ? true : false);
-    await setDoc(dbPathRef, docData); //caminho, documento, merge
+    await setDoc(dbPathRef, docData, { merge: true }); //caminho, documento, merge
   }
 
   useEffect(() => {
