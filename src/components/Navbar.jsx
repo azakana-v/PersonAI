@@ -48,7 +48,7 @@ const PerfilCardMainContainer = styled.div`
   align-items: center;
   justify-content: center;
   color: white;
-  margin-right: 120px;
+  margin-right: 100px;
   cursor: pointer;
   /* width: 0px; */
   p {
