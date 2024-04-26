@@ -48,7 +48,7 @@ const PerfilCardMainContainer = styled.div`
   align-items: center;
   justify-content: center;
   color: white;
-  margin-right: 100px;
+  margin-right: 120px;
   cursor: pointer;
   /* width: 0px; */
   p {
@@ -106,7 +106,7 @@ const BotImageContainer = styled.section`
   max-height: 50px;
   min-width: 50px;
   min-height: 50px;
-  margin-left: 80px;
+  margin-left: 2px;
   border-radius: 50%;
 `;
 
@@ -207,7 +207,6 @@ const Navbar = (props) => {
             ""
           ) : (
             <LoginButton
-              style={{ marginLeft: "50px" }}
               onClick={() => {
                 navigate("/login");
               }}
