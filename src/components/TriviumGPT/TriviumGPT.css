@@ -40,6 +40,7 @@
 }
 #SirioMessage img {
   max-width: 50px;
+  min-width: 50px;
   border-radius: 500px;
   margin-right: 10px;
 }
