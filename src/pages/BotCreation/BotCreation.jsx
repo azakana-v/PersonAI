@@ -70,6 +70,10 @@ const MainContentContainer = styled.div`
   background-repeat: no-repeat;
   background-size: 100%;
   background-position: top;
+  @media screen and (max-width: 960px) {
+    align-items: start;
+    margin-top: 25px;
+  }
 `;
 const HomeTextContainer = styled.div`
   max-width: 40%;
@@ -89,11 +93,18 @@ const BotImageContainer = styled.section`
   position: relative;
   max-width: 200px;
   max-height: 200px;
-  min-width: 200px;
-  min-height: 200px;
+
   margin-bottom: 50px;
   margin-top: 10px;
   border-radius: 50%;
+  @media screen and (max-width: 960px) {
+    min-width: 150px;
+    max-width: 150px;
+    max-height: 150px;
+    max-height: 150px;
+    margin-bottom: 20px;
+    margin-top: 0px;
+  }
 `;
 const Overlay = styled.div`
   position: absolute;
@@ -119,8 +130,8 @@ const Overlay = styled.div`
 `;
 const BotImg = styled.img`
   background-color: gray;
-  width: 100%;
-  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
   margin-bottom: 50px;
   margin-top: 10px;
   border-radius: 50%;
@@ -139,6 +150,10 @@ const CreateBotContainer = styled.div`
   box-shadow: 29px 29px 72px #a8a8a8, -29px -29px 72px #ffffff;
   @media screen and (max-width: 960px) {
     width: 90%;
+    height: auto;
+    box-shadow: none;
+    justify-content: start;
+    /* align-items: center; */
   }
 `;
 
@@ -149,29 +164,38 @@ const Salute = styled.input`
   height: 50px;
   border-radius: 10px;
 
-  color: lightgray;
+  color: #2b8fb9;
   padding: 1rem;
 
   &:focus {
     outline-color: #2b8fb9;
+  }
+  @media screen and (max-width: 960px) {
+    padding: 0.3rem;
   }
 `;
 const Context = styled.textarea`
   width: 60%;
   margin-bottom: 20px;
   border: none;
-  height: 20rem;
+
   border-radius: 10px;
 
   padding: 2rem;
-  color: lightgray;
+  color: #2b8fb9;
 
   &:focus {
     outline-color: #2b8fb9;
   }
+  @media screen and (max-width: 960px) {
+    padding: 1rem;
+  }
 `;
 const Logo = styled.img`
   width: 350px;
+  @media screen and (max-width: 960px) {
+    width: 80%;
+  }
 `;
 
 const CreateButton = styled.button`
@@ -183,6 +207,7 @@ const CreateButton = styled.button`
   border-radius: 0.5rem;
   padding: 0.5rem;
   cursor: pointer;
+  border: none;
 `;
 
 function BotCreation() {
