@@ -4,11 +4,12 @@
 
 #MainSirioContainer {
   display: flex;
-  /* justify-content: center; */
+
   align-items: center;
   height: 100%;
   width: 100%;
 }
+
 #MessagesContainer {
   padding: 15px;
   padding-right: 0px;
@@ -17,6 +18,19 @@
   max-width: 800px;
   min-width: 800px;
   height: 90vh !important;
+}
+
+@media screen and (max-width: 960px) {
+  #MainSirioContainer {
+    justify-content: center;
+  }
+  #SirioContainer {
+    max-width: unset;
+    min-width: 100%;
+  }
+  .cs-main-container {
+    width: 100%;
+  }
 }
 
 #SirioMessage {
@@ -77,6 +91,12 @@
   /* background-color: black; */
 }
 
+@media screen and (max-width: 960px) {
+  #sideChatsMainContainer {
+    width: 0%;
+  }
+}
+
 .cardSideChatsMainContainer {
   display: flex;
   align-items: center;
@@ -92,4 +112,16 @@
   background-color: #99c5d2;
   margin-right: 15px;
   border-radius: 50%;
+}
+
+.sideChatButtonMobile {
+  margin-top: 15px;
+  height: 100px;
+  padding: 15px;
+  border: none;
+  cursor: pointer;
+  background-color: #113c4f;
+  color: white;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
 }

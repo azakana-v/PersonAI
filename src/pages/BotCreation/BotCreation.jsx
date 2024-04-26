@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import fundohome from "../../assets/fundohome.png";
 import logonav from "../../assets/logonav.png";
-import pen from '../../assets/Pen.svg';
+import pen from "../../assets/Pen.svg";
 import TriviumGPT from "../../components/TriviumGPT/TriviumGPT";
-import defaultUser from '../../assets/defaultUser.jpg';
+import defaultUser from "../../assets/defaultUser.jpg";
 import "./BotCreation.css";
 
 import {
@@ -86,15 +86,15 @@ const HomeText = styled.p`
   margin-bottom: 100px;
 `;
 const BotImageContainer = styled.section`
-position: relative;
-max-width: 200px;
-max-height: 200px;
-min-width: 200px;
-min-height: 200px;
-margin-bottom: 50px;
-margin-top: 10px;
-border-radius: 50%;
-`
+  position: relative;
+  max-width: 200px;
+  max-height: 200px;
+  min-width: 200px;
+  min-height: 200px;
+  margin-bottom: 50px;
+  margin-top: 10px;
+  border-radius: 50%;
+`;
 const Overlay = styled.div`
   position: absolute;
   margin-top: 10px;
@@ -111,10 +111,10 @@ const Overlay = styled.div`
   opacity: 0;
   cursor: pointer;
   border-radius: 50%;
-  &:hover{
+  &:hover {
     opacity: 1;
   }
- 
+
   transition: opacity 0.3s ease;
 `;
 const BotImg = styled.img`
@@ -137,6 +137,9 @@ const CreateBotContainer = styled.div`
   border-radius: 50px;
 
   box-shadow: 29px 29px 72px #a8a8a8, -29px -29px 72px #ffffff;
+  @media screen and (max-width: 960px) {
+    width: 90%;
+  }
 `;
 
 const Salute = styled.input`
@@ -175,11 +178,11 @@ const CreateButton = styled.button`
   width: 250px;
   height: 50px;
   margin: 1rem 0rem;
-background-color: #113C4F;
-color: #fff;
-border-radius: 0.5rem;
-padding: 0.5rem;
-cursor: pointer;
+  background-color: #113c4f;
+  color: #fff;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
 `;
 
 function BotCreation() {
@@ -189,16 +192,16 @@ function BotCreation() {
   const [user, setUser] = useState(false);
   const [saluteMsg, setSaluteMsg] = useState("");
   const [contextConfig, setContextConfig] = useState();
-  const [createdImage, setCreatedImage] = useState('');
+  const [createdImage, setCreatedImage] = useState("");
   const navigate = useNavigate();
 
   const handleModalOpen = () => {
     setOpenModal(!openModal);
-  }
+  };
 
   const closeModal = () => {
     setOpenModal(false);
-  }
+  };
 
   async function addData() {
     const dataUser = await getUserData();
@@ -238,7 +241,9 @@ function BotCreation() {
           <CreateBotContainer>
             <BotImageContainer>
               <BotImg src={createdImage ? logonav : defaultUser} />
-              <Overlay className="overlay"><img src={pen} width={25} height={20}/> Criar avatar</Overlay>
+              <Overlay className="overlay">
+                <img src={pen} width={25} height={20} /> Criar avatar
+              </Overlay>
             </BotImageContainer>
             <Salute
               onChange={(e) => {

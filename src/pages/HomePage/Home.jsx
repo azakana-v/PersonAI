@@ -11,6 +11,11 @@ import Svg from "../../components/Svg";
 const MainContainer = styled.div`
   overflow: hidden;
   height: 100vh;
+  @media screen and (max-width: 960px) {
+    svg {
+      display: none;
+    }
+  }
 `;
 
 const HomeContainer = styled.div`
@@ -23,20 +28,45 @@ const HomeContainer = styled.div`
   background-size: 100%;
   background-position: top;
   overflow: hidden;
+  @media screen and (max-width: 960px) {
+    flex-direction: column;
+  }
 `;
 const HomeTextContainer = styled.div`
   max-width: 40%;
   width: 100%;
+  @media screen and (max-width: 960px) {
+    flex-direction: column;
+    max-width: 90%;
+  }
+  @media screen and (max-height: 700px) {
+    flex-direction: column;
+    max-width: 90%;
+  }
 `;
 const HomeTitle = styled.h1`
   color: #113c4f;
   font-size: 35px;
   margin-bottom: 20px;
+  @media screen and (max-width: 960px) {
+    font-size: 25px;
+    text-align: center;
+  }
+  @media screen and (max-height: 700px) {
+    font-size: 25px;
+  }
 `;
 const HomeText = styled.p`
   color: #30a0bf;
   font-size: 20px;
   margin-bottom: 100px;
+  @media screen and (max-width: 960px) {
+    font-size: 20px;
+    text-align: center;
+  }
+  @media screen and (max-height: 700px) {
+    font-size: 18px;
+  }
 `;
 const HomeImg = styled.img`
   width: 40%;
@@ -49,6 +79,14 @@ const HomeImg = styled.img`
     100% {
       transform: translatey(30px);
     }
+  }
+  @media screen and (max-width: 960px) {
+    width: 70%;
+  }
+  @media screen and (max-height: 700px) {
+    flex-direction: column;
+    max-width: 90%;
+    width: 50%;
   }
 `;
 
