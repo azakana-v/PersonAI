@@ -260,10 +260,11 @@ function TriviumGPT(props) {
                 <InfiniteScroll
                   endMessage={<p>Fim :)</p>}
                   dataLength={userObj.chats.length}
-                  height={"90vh"}
+                  height={"85vh"}
                   style={{
                     paddingLeft: "15px",
                     backgroundColor: "rgb(225, 243, 248)",
+                    minWidth: "80vw",
                   }}
                 >
                   {" "}

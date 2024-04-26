@@ -27,6 +27,7 @@
   #SirioContainer {
     max-width: unset;
     min-width: 100%;
+    height: 85vh !important;
   }
   .cs-main-container {
     width: 100%;
