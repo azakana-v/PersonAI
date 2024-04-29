@@ -190,7 +190,13 @@ function BotCreation() {
   const [saluteMsg, setSaluteMsg] = useState("");
   const [contextConfig, setContextConfig] = useState();
   const [createdImage, setCreatedImage] = useState('');
+  const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
+
+  const handleGeneratedImage = ( imageUrl ) =>{
+    console.log('aqui está a imagem:', imageUrl)
+    setCreatedImage(imageUrl);
+  }
 
   const handleModalOpen = () => {
     setOpenModal(!openModal);
@@ -235,9 +241,12 @@ function BotCreation() {
         <TriviumGPT context={contextConfig} salute={saluteMsg}></TriviumGPT>
       ) : (
         <MainContentContainer>
+          {openModal && (
+            <CreateImageModal generatedImage={handleGeneratedImage} closeModal={closeModal}/>
+          )}
           <CreateBotContainer>
-            <BotImageContainer>
-              <BotImg src={createdImage ? logonav : defaultUser} />
+            <BotImageContainer onClick={handleModalOpen}>
+              <BotImg src={createdImage ? createdImage : defaultUser} />
               <Overlay className="overlay"><img src={pen} width={25} height={20}/> Criar avatar</Overlay>
             </BotImageContainer>
             <Salute
