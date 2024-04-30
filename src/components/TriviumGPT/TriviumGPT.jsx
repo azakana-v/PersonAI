@@ -41,6 +41,7 @@ function TriviumGPT(props) {
   const [messagePaused, setMessagePaused] = useState();
   const [salute, setSalute] = useState();
   const [context, setContext] = useState();
+  const [img, setImg] = useState();
   const [sidechat, setSideChat] = useState(false);
   const [messages, setMessages] = useState([
     {
@@ -83,11 +84,13 @@ function TriviumGPT(props) {
       const lastChat = userData.data().chats.length - 1;
       const initialSalute = userData.data().chats[lastChat].salute;
       const system = userData.data().chats[lastChat].context;
+      const imgUrl = userData.data().chats[lastChat].img;
       console.log(lastChat);
 
       console.log("Document data:", userData.data());
       setUserObj(userData.data());
       setContext(system);
+      setImg(imgUrl);
       setMessages([
         {
           message: `${initialSalute}`,
@@ -319,7 +322,14 @@ function TriviumGPT(props) {
                       }}
                     >
                       <div className="cardSideChatsMainContainer">
-                        <div className="imgSideChatContainer"></div>
+                        <div className="imgSideChatContainer">
+                          <img
+                            width={"100%"}
+                            style={{ borderRadius: "50%" }}
+                            src={userObj.chats[i].img}
+                            alt=""
+                          />
+                        </div>
                         <div className="cardSideChats">
                           <p>{userObj.chats[i].salute}</p>
                         </div>
@@ -360,7 +370,7 @@ function TriviumGPT(props) {
                               marginRight: "10px  ",
                             }}
                           >
-                            <img src={""} alt="" />
+                            <img src={img} alt="" />
                           </div>
                           <Message
                             className="MessagesContainers"

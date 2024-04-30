@@ -218,15 +218,15 @@ function BotCreation() {
   const [saluteMsg, setSaluteMsg] = useState("");
   const [contextConfig, setContextConfig] = useState();
 
-  const [createdImage, setCreatedImage] = useState('');
+  const [createdImage, setCreatedImage] = useState("");
   const [openModal, setOpenModal] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleGeneratedImage = ( imageUrl ) =>{
-    console.log('aqui está a imagem:', imageUrl)
+  const handleGeneratedImage = (imageUrl) => {
+    console.log("aqui está a imagem:", imageUrl);
     setCreatedImage(imageUrl);
-  }
+  };
 
   const handleModalOpen = () => {
     setOpenModal(!openModal);
@@ -241,7 +241,11 @@ function BotCreation() {
     const newChats = dataUser.chats
       ? [
           ...dataUser.chats,
-          { context: contextConfig, img: "", salute: saluteMsg },
+          {
+            context: contextConfig,
+            img: createdImage ? createdImage : "",
+            salute: saluteMsg,
+          },
         ]
       : [{ context: contextConfig, img: "", salute: saluteMsg }];
     const newPersona = { chats: newChats };
@@ -272,14 +276,17 @@ function BotCreation() {
       ) : (
         <MainContentContainer>
           {openModal && (
-            <CreateImageModal generatedImage={handleGeneratedImage} closeModal={closeModal}/>
+            <CreateImageModal
+              generatedImage={handleGeneratedImage}
+              closeModal={closeModal}
+            />
           )}
           <CreateBotContainer>
-
             <BotImageContainer onClick={handleModalOpen}>
               <BotImg src={createdImage ? createdImage : defaultUser} />
-              <Overlay className="overlay"><img src={pen} width={25} height={20}/> Criar avatar</Overlay>
-
+              <Overlay className="overlay">
+                <img src={pen} width={25} height={20} /> Criar avatar
+              </Overlay>
             </BotImageContainer>
             <Salute
               onChange={(e) => {
