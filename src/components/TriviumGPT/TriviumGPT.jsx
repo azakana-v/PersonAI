@@ -285,7 +285,13 @@ function TriviumGPT(props) {
                           }}
                         >
                           <div className="cardSideChatsMainContainer">
-                            <div className="imgSideChatContainer"></div>
+                            <div className="imgSideChatContainer">
+                              <img
+                                style={{ borderRadius: "50%", width: "100%" }}
+                                src={userObj.chats[i].img}
+                                alt=""
+                              />
+                            </div>
                             <div className="cardSideChats">
                               <p>{userObj.chats[i].salute}</p>
                             </div>
