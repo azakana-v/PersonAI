@@ -41,6 +41,7 @@ function TriviumGPT(props) {
   const [messagePaused, setMessagePaused] = useState();
   const [salute, setSalute] = useState();
   const [context, setContext] = useState();
+  const [sidechat, setSideChat] = useState(false);
   const [messages, setMessages] = useState([
     {
       message: salute,
@@ -240,6 +241,64 @@ function TriviumGPT(props) {
         // style={{ position: "relative", height: "900px", width: "1000px" }}
       >
         <div id="sideChatsMainContainer">
+          {window.innerWidth < 960 ? (
+            <div
+              style={{
+                display: "flex",
+                position: "fixed",
+                right: "0px",
+                zIndex: "999",
+              }}
+            >
+              <button
+                onClick={() => {
+                  setSideChat(!sidechat);
+                }}
+                className="sideChatButtonMobile"
+              >{`<`}</button>
+              {sidechat ? (
+                <InfiniteScroll
+                  endMessage={<p>Fim :)</p>}
+                  dataLength={userObj.chats.length}
+                  height={"80vh"}
+                  style={{
+                    paddingLeft: "15px",
+                    backgroundColor: "rgb(225, 243, 248)",
+                    minWidth: "80vw",
+                  }}
+                >
+                  {" "}
+                  {userObj.chats.map((x, i) => {
+                    if (true)
+                      return (
+                        <div
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            updateSaluteAndContext(
+                              userObj.chats[i].salute,
+                              userObj.chats[i].context
+                            );
+                            setSideChat(false);
+                          }}
+                        >
+                          <div className="cardSideChatsMainContainer">
+                            <div className="imgSideChatContainer"></div>
+                            <div className="cardSideChats">
+                              <p>{userObj.chats[i].salute}</p>
+                            </div>
+                          </div>
+                          <hr style={{ color: "rgb(153, 197, 210)" }} />
+                        </div>
+                      );
+                  })}
+                </InfiniteScroll>
+              ) : (
+                ""
+              )}
+            </div>
+          ) : (
+            ""
+          )}
           {userObj ? (
             <InfiniteScroll
               endMessage={<p>Fim :)</p>}

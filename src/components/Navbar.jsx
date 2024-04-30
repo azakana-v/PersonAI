@@ -4,6 +4,8 @@ import logonav from "../assets/logonav.png";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../App";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import defaultUser from "../assets/defaultUser.jpg";
+
 const NavbarContainer = styled.div`
   width: 100%;
   height: 80px;
@@ -46,11 +48,14 @@ const PerfilCardMainContainer = styled.div`
   align-items: center;
   justify-content: center;
   color: white;
-  margin-right: 100px;
+  margin-right: 50px;
   cursor: pointer;
   /* width: 0px; */
   p {
     white-space: nowrap;
+  }
+  @media screen and (max-width: 960px) {
+    /* margin-right: 0px; */
   }
 `;
 
@@ -81,6 +86,28 @@ const PerfilCard = styled.div`
       top: 115px;
     }
   }
+  @media screen and (max-width: 960px) {
+    left: -100px;
+  }
+`;
+
+const BotImg = styled.img`
+  background-color: gray;
+  width: 100%;
+  height: 100%;
+  /* margin-bottom: 50px; */
+  /* margin-top: 10px; */
+  border-radius: 50%;
+`;
+
+const BotImageContainer = styled.section`
+  position: relative;
+  max-width: 50px;
+  max-height: 50px;
+  min-width: 50px;
+  min-height: 50px;
+  margin-left: 2px;
+  border-radius: 50%;
 `;
 
 const Navbar = (props) => {
@@ -136,7 +163,17 @@ const Navbar = (props) => {
             }
           }}
         >
-          {user ? <p>{screenName}</p> : " "}
+          {user ? (
+            window.innerWidth > 960 ? (
+              <p>{screenName}</p>
+            ) : (
+              <BotImageContainer>
+                <BotImg src={defaultUser} />
+              </BotImageContainer>
+            )
+          ) : (
+            " "
+          )}
           {perfilClicked ? (
             <PerfilCardContainer>
               <PerfilCard>
@@ -170,7 +207,6 @@ const Navbar = (props) => {
             ""
           ) : (
             <LoginButton
-              style={{ marginBottom: "0" }}
               onClick={() => {
                 navigate("/login");
               }}

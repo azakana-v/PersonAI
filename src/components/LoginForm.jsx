@@ -8,23 +8,28 @@ import { useState } from "react";
 import { auth } from "../App";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
-
 const FormArea = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 20rem;
-  height: 20rem;
+  width: 40rem;
+  height: 40rem;
   background-color: #e6f1f5;
   padding: 1rem;
   border-radius: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  @media screen and (max-width: 960px) {
+    width: 80%;
+    height: 70%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  }
 `;
 
 const FormInput = styled.input`
   height: 2rem;
   border-radius: 0.5rem;
   color: #113c4f;
-  padding: 0.1rem;
+  padding: 0.5rem;
   border: 1px solid #ccc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   &:focus {
@@ -102,9 +107,6 @@ const BtnGoogle = styled.button`
   }
 `;
 
-
-
-
 function LoginForm(props) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -169,7 +171,17 @@ function LoginForm(props) {
         />
         Sign In with Google
       </BtnGoogle>
-<span onClick={() => navigate("/NewUser")} style={{ textAlign: 'center', marginTop: '0.3rem', color:'#0000EE', cursor: 'pointer' }}>Não possui conta? Crie uma agora.</span>
+      <span
+        onClick={() => navigate("/NewUser")}
+        style={{
+          textAlign: "center",
+          marginTop: "0.3rem",
+          color: "#0000EE",
+          cursor: "pointer",
+        }}
+      >
+        Não possui conta? Crie uma agora.
+      </span>
     </FormArea>
   );
 }
