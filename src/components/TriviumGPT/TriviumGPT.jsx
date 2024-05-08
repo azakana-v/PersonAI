@@ -27,6 +27,7 @@ import {
 } from "firebase/auth";
 
 import { doc, getDoc } from "firebase/firestore";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const API_KEY = import.meta.env.VITE_REACT_API_GPT_KEY;
 
@@ -40,6 +41,8 @@ function TriviumGPT(props) {
   const [messagePaused, setMessagePaused] = useState();
   const [salute, setSalute] = useState();
   const [context, setContext] = useState();
+  const [img, setImg] = useState();
+  const [sidechat, setSideChat] = useState(false);
   const [messages, setMessages] = useState([
     {
       message: salute,
@@ -81,11 +84,13 @@ function TriviumGPT(props) {
       const lastChat = userData.data().chats.length - 1;
       const initialSalute = userData.data().chats[lastChat].salute;
       const system = userData.data().chats[lastChat].context;
+      const imgUrl = userData.data().chats[lastChat].img;
       console.log(lastChat);
 
       console.log("Document data:", userData.data());
       setUserObj(userData.data());
       setContext(system);
+      setImg(imgUrl);
       setMessages([
         {
           message: `${initialSalute}`,
@@ -239,8 +244,78 @@ function TriviumGPT(props) {
         // style={{ position: "relative", height: "900px", width: "1000px" }}
       >
         <div id="sideChatsMainContainer">
-          {userObj
-            ? userObj.chats.map((x, i) => {
+          {window.innerWidth < 960 ? (
+            <div
+              style={{
+                display: "flex",
+                position: "fixed",
+                right: "0px",
+                zIndex: "999",
+              }}
+            >
+              <button
+                onClick={() => {
+                  setSideChat(!sidechat);
+                }}
+                className="sideChatButtonMobile"
+              >{`<`}</button>
+              {sidechat ? (
+                <InfiniteScroll
+                  endMessage={<p>Fim :)</p>}
+                  dataLength={userObj.chats.length}
+                  height={"80vh"}
+                  style={{
+                    paddingLeft: "15px",
+                    backgroundColor: "rgb(225, 243, 248)",
+                    minWidth: "80vw",
+                  }}
+                >
+                  {" "}
+                  {userObj.chats.map((x, i) => {
+                    if (true)
+                      return (
+                        <div
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            updateSaluteAndContext(
+                              userObj.chats[i].salute,
+                              userObj.chats[i].context
+                            );
+                            setSideChat(false);
+                          }}
+                        >
+                          <div className="cardSideChatsMainContainer">
+                            <div className="imgSideChatContainer">
+                              <img
+                                style={{ borderRadius: "50%", width: "100%" }}
+                                src={userObj.chats[i].img}
+                                alt=""
+                              />
+                            </div>
+                            <div className="cardSideChats">
+                              <p>{userObj.chats[i].salute}</p>
+                            </div>
+                          </div>
+                          <hr style={{ color: "rgb(153, 197, 210)" }} />
+                        </div>
+                      );
+                  })}
+                </InfiniteScroll>
+              ) : (
+                ""
+              )}
+            </div>
+          ) : (
+            ""
+          )}
+          {userObj ? (
+            <InfiniteScroll
+              endMessage={<p>Fim :)</p>}
+              dataLength={userObj.chats.length}
+              height={"90vh"}
+            >
+              {" "}
+              {userObj.chats.map((x, i) => {
                 if (true)
                   return (
                     <div
@@ -253,7 +328,14 @@ function TriviumGPT(props) {
                       }}
                     >
                       <div className="cardSideChatsMainContainer">
-                        <div className="imgSideChatContainer"></div>
+                        <div className="imgSideChatContainer">
+                          <img
+                            width={"100%"}
+                            style={{ borderRadius: "50%" }}
+                            src={userObj.chats[i].img}
+                            alt=""
+                          />
+                        </div>
                         <div className="cardSideChats">
                           <p>{userObj.chats[i].salute}</p>
                         </div>
@@ -261,8 +343,11 @@ function TriviumGPT(props) {
                       <hr />
                     </div>
                   );
-              })
-            : "Erro ao carregar chats antigos"}
+              })}
+            </InfiniteScroll>
+          ) : (
+            "Erro ao carregar chats antigos"
+          )}
         </div>
 
         <MainContainer>
@@ -282,7 +367,17 @@ function TriviumGPT(props) {
                     if (messages[i].sender === "ChatGPT") {
                       return (
                         <div id="SirioMessage">
-                          <img src={VictorHomePage} alt="" />
+                          <div
+                            style={{
+                              backgroundColor: "#113C4F",
+                              width: "50px",
+                              height: "50px",
+                              borderRadius: "50%",
+                              marginRight: "10px  ",
+                            }}
+                          >
+                            <img src={img} alt="" />
+                          </div>
                           <Message
                             className="MessagesContainers"
                             key={i}
@@ -348,12 +443,10 @@ function TriviumGPT(props) {
                   }}
                 >
                   <box-icon
-                    color="rgb(242, 16, 61)"
+                    color="#113C4F"
                     type="solid"
                     name="microphone"
-                    style={
-                      listening ? { backgroundColor: "rgb(242, 16, 61)" } : {}
-                    }
+                    style={listening ? { backgroundColor: "#113C4F" } : {}}
                   ></box-icon>
                 </button>
               </div>{" "}

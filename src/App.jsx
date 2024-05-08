@@ -6,6 +6,8 @@ import "./App.css";
 import TriviumGPT from "./components/TriviumGPT/TriviumGPT";
 import Home from "./pages/HomePage/Home";
 
+import NewUser from "./pages/CreateAccount/NewUser";
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -36,7 +38,7 @@ import Login from "./pages/Login/Login";
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-export const provider = new GoogleAuthProvider();
+// export let provider = new GoogleAuthProvider();
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 auth.useDeviceLanguage();
@@ -55,7 +57,7 @@ function App() {
     });
   }, []);
 
-  function handleLogin() {
+  function handleLogin(authenticator) {
     signInWithPopup(auth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
@@ -84,12 +86,16 @@ function App() {
         <Navbar></Navbar>
         <Routes>
           <Route path="/" element={<Home />}></Route>
-          <Route path="/TriviumGPT" element={<TriviumGPT />}></Route>
+          <Route
+            path="/TriviumGPT"
+            element={user ? <TriviumGPT /> : <Login />}
+          ></Route>
           <Route
             path="/BotCreation"
             element={user ? <BotCreation /> : <Login />}
           ></Route>
           <Route path="/login" element={<Login />}></Route>
+          <Route path="/NewUser" element={<NewUser />}></Route>
         </Routes>
       </Router>
     </div>
