@@ -111,7 +111,11 @@ function NewUser() {
         <FormInput type="password" placeholder="Digite sua senha" />
         <FormButton>Criar</FormButton>
         <p style={{ textAlign: "center" }}>ou</p>
-        <BtnFacebook>
+        <BtnFacebook 
+          onClick={(e) => {
+            e.preventDefault();
+            props.handlelogin("facebook");
+          }}>
           <img
             src={facebookIcon}
             alt="A facebook logo icon in pixel perfect"
@@ -121,6 +125,10 @@ function NewUser() {
           Sign Up with Facebook
         </BtnFacebook>
         <BtnGoogle>
+          onClick={(e) => {
+            e.preventDefault();
+            props.handlelogin("google");
+          }}
           <img
             src={googleIcon}
             alt="A google logo icon in pixel perfect"
