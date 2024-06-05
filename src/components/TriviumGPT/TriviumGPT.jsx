@@ -26,8 +26,19 @@ import {
   signOut,
 } from "firebase/auth";
 
-import { doc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  deleteField,
+  setDoc,
+} from "firebase/firestore";
 import InfiniteScroll from "react-infinite-scroll-component";
+
+import TrashImg from "../../assets/trash-can.png";
+import PencilImg from "../../assets/pencil.png";
+import ModalEdit from "./ModalEdit";
+import { useNavigate } from "react-router-dom";
 
 const API_KEY = import.meta.env.VITE_REACT_API_GPT_KEY;
 
@@ -43,12 +54,29 @@ function TriviumGPT(props) {
   const [context, setContext] = useState();
   const [img, setImg] = useState();
   const [sidechat, setSideChat] = useState(false);
+  const [updateData, setUpdateData] = useState();
+  const [clickedIndexes, setClickedIndexes] = useState([]);
+  const [modal, setModal] = useState(false);
+  const [systemPai, setSystemPai] = useState();
+  const [salutePai, setSalutePai] = useState();
+  const [indiceState, setIndiceState] = useState();
   const [messages, setMessages] = useState([
     {
       message: salute,
       sender: "ChatGPT",
     },
   ]); //Array de mensagens
+
+  const navigate = useNavigate();
+
+  function openModal(indice) {
+    setIndiceState(indice);
+    setModal(true);
+  }
+
+  function closeModal() {
+    setModal(false);
+  }
 
   function updateSaluteAndContext(newSalute, newContext) {
     setSalute(newSalute);
@@ -101,6 +129,50 @@ function TriviumGPT(props) {
       // docSnap.data() will be undefined in this case
       console.log("No such document!");
     }
+  }
+
+  async function deleteData(indice) {
+    const userRef = doc(db, "usuarios", auth.currentUser.uid);
+    const auxDataUser = await getDoc(userRef);
+    const dataUser = auxDataUser.data();
+    const dbPathRef = doc(db, "usuarios", `${auth.currentUser.uid}`);
+
+    const oldArr = dataUser.chats;
+    const newArr = [...oldArr.slice(0, indice), ...oldArr.slice(indice + 1)];
+    const newChats = { chats: newArr };
+    console.log(newChats);
+    await setDoc(dbPathRef, newChats, { merge: true });
+    setUpdateData("");
+    //     .then(
+    //   navigate("/TriviumGPT")
+    // ); //caminho, documento, merge
+  }
+
+  async function editData(salute, context) {
+    const userRef = doc(db, "usuarios", auth.currentUser.uid);
+    const auxDataUser = await getDoc(userRef);
+    const dataUser = auxDataUser.data();
+    const dbPathRef = doc(db, "usuarios", `${auth.currentUser.uid}`);
+
+    const oldArr = dataUser.chats;
+    const newArr = [
+      ...oldArr.slice(0, indiceState),
+      {
+        context: `${context == "" ? oldArr[indiceState].context : context}`,
+        salute: `${salute == "" ? oldArr[indiceState].salute : salute}`,
+        img: `${oldArr[indiceState].img}`,
+      },
+      ...oldArr.slice(indiceState + 1),
+    ];
+    console.log("hmm");
+    console.log(newArr);
+    const newChats = { chats: newArr };
+    console.log(newChats);
+    await setDoc(dbPathRef, newChats, { merge: true }).then(navigate("/"));
+    setUpdateData("");
+    //     .then(
+    //   navigate("/TriviumGPT")
+    // ); //caminho, documento, merge
   }
 
   function handleLogin() {
@@ -239,6 +311,16 @@ function TriviumGPT(props) {
 
   return (
     <div id="MainContainer">
+      {modal ? (
+        <ModalEdit
+          systemPai={systemPai}
+          salutePai={salutePai}
+          closeModal={closeModal}
+          editData={editData}
+        />
+      ) : (
+        ""
+      )}
       <div
         id="MainSirioContainer"
         // style={{ position: "relative", height: "900px", width: "1000px" }}
@@ -274,28 +356,32 @@ function TriviumGPT(props) {
                   {userObj.chats.map((x, i) => {
                     if (true)
                       return (
-                        <div
-                          style={{ cursor: "pointer" }}
-                          onClick={() => {
-                            updateSaluteAndContext(
-                              userObj.chats[i].salute,
-                              userObj.chats[i].context
-                            );
-                            setSideChat(false);
-                          }}
-                        >
+                        <div style={{ cursor: "pointer" }}>
                           <div className="cardSideChatsMainContainer">
-                            <div className="imgSideChatContainer">
-                              <img
-                                style={{ borderRadius: "50%", width: "100%" }}
-                                src={userObj.chats[i].img}
-                                alt=""
-                              />
+                            <div
+                              onClick={() => {
+                                updateSaluteAndContext(
+                                  userObj.chats[i].salute,
+                                  userObj.chats[i].context
+                                );
+                                setSideChat(false);
+                              }}
+                              className="saudadeStyledComponents"
+                            >
+                              <div className="imgSideChatContainer">
+                                <img
+                                  style={{ borderRadius: "50%", width: "100%" }}
+                                  src={userObj.chats[i].img}
+                                  alt=""
+                                />
+                              </div>
+                              <div className="cardSideChats">
+                                <p>{userObj.chats[i].salute}</p>
+                              </div>
                             </div>
-                            <div className="cardSideChats">
-                              <p>{userObj.chats[i].salute}</p>
-                            </div>
+                            <img className="manoSeiLa" src={TrashImg} alt="" />
                           </div>
+
                           <hr style={{ color: "rgb(153, 197, 210)" }} />
                         </div>
                       );
@@ -319,26 +405,58 @@ function TriviumGPT(props) {
                 if (true)
                   return (
                     <div
+                      className={`rowside ${
+                        clickedIndexes.includes(i) ? "clicked" : ""
+                      }`}
                       style={{ cursor: "pointer" }}
-                      onClick={() => {
-                        updateSaluteAndContext(
-                          userObj.chats[i].salute,
-                          userObj.chats[i].context
-                        );
-                      }}
                     >
                       <div className="cardSideChatsMainContainer">
-                        <div className="imgSideChatContainer">
-                          <img
-                            width={"100%"}
-                            style={{ borderRadius: "50%" }}
-                            src={userObj.chats[i].img}
-                            alt=""
-                          />
+                        <div
+                          onClick={() => {
+                            updateSaluteAndContext(
+                              userObj.chats[i].salute,
+                              userObj.chats[i].context
+                            );
+                          }}
+                          className="saudadeStyledComponents"
+                        >
+                          <div className="imgSideChatContainer">
+                            <img
+                              width={"100%"}
+                              style={{ borderRadius: "50%" }}
+                              src={userObj.chats[i].img}
+                              alt=""
+                            />
+                          </div>
+                          <div className="cardSideChats">
+                            <p>{userObj.chats[i].salute}</p>
+                          </div>
                         </div>
-                        <div className="cardSideChats">
-                          <p>{userObj.chats[i].salute}</p>
-                        </div>
+                        <img
+                          onClick={() => {
+                            let indice = i;
+                            console.log("bola");
+                            openModal(indice);
+                            setSalutePai(userObj.chats[indice].salute);
+                            setSystemPai(userObj.chats[indice].context);
+                          }}
+                          src={PencilImg}
+                          alt=""
+                        />
+
+                        <img
+                          className="manoSeila"
+                          onClick={() => {
+                            const updatedIndexes = [...clickedIndexes];
+                            updatedIndexes.push(i);
+                            setClickedIndexes(updatedIndexes);
+                            const indice = i;
+                            console.log(indice);
+                            deleteData(indice);
+                          }}
+                          src={TrashImg}
+                          alt=""
+                        />
                       </div>
                       <hr />
                     </div>
